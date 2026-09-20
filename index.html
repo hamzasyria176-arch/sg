@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samer Gaming Lounge System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #09090b;
+            color: #f3f4f6;
+        }
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .gaming-glow {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+        .gaming-glow-hover:hover {
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ef4444;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#07070a] text-gray-100 flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-[#111116] border-b border-red-900/40 sticky top-0 z-40 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-black flex items-center justify-center border border-red-500/50 gaming-glow">
+                    <i class="fa-solid fa-gamepad text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-white orbitron">SAMER GAMING</h1>
+                    <p class="text-[10px] text-red-400 font-semibold uppercase tracking-widest">Lounge Management System</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 justify-start md:justify-center">
+                <button onclick="switchTab('playstation')" id="tab-playstation" class="px-4 py-2 rounded-lg font-bold text-sm bg-red-600 text-white transition flex items-center gap-2 shadow-lg shadow-red-900/45 whitespace-nowrap">
+                    <i class="fa-solid fa-dice text-xs"></i> PlayStation (<span id="ps-count">4</span>)
+                </button>
+                <button onclick="switchTab('pc')" id="tab-pc" class="px-4 py-2 rounded-lg font-bold text-sm bg-[#1a1a24] text-gray-300 hover:bg-[#252533] transition flex items-center gap-2 border border-red-900/20 whitespace-nowrap">
+                    <i class="fa-solid fa-desktop text-xs"></i> PC Stations (<span id="pc-count">8</span>)
+                </button>
+                <button onclick="switchTab('ledger')" id="tab-ledger" class="px-4 py-2 rounded-lg font-bold text-sm bg-[#1a1a24] text-gray-300 hover:bg-[#252533] transition flex items-center gap-2 border border-red-900/20 whitespace-nowrap">
+                    <i class="fa-solid fa-file-invoice-dollar text-xs"></i> الحساب اليومي / السجل
+                </button>
+                <button onclick="switchTab('products')" id="tab-products" class="px-4 py-2 rounded-lg font-bold text-sm bg-[#1a1a24] text-gray-300 hover:bg-[#252533] transition flex items-center gap-2 border border-red-900/20 whitespace-nowrap">
+                    <i class="fa-solid fa-boxes-stacked text-xs"></i> إدارة السلع
+                </button>
+            </div>
+
+            <!-- Reset Daily Data Button -->
+            <div>
+                <button onclick="resetDailyData()" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 text-red-200 text-xs font-bold rounded-lg border border-red-700/50 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-right"></i> تصفير السجل اليومي
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- TAB 1: PLAYSTATION STATIONS -->
+        <div id="section-playstation" class="space-y-6">
+            <div class="flex justify-between items-center border-b border-red-900/30 pb-3">
+                <h2 class="text-xl font-black text-red-500 orbitron flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad"></i> أجهزة البلايستيشن (PlayStation)
+                </h2>
+                <span class="text-xs bg-red-950 text-red-300 px-3 py-1 rounded-full border border-red-800/40 font-bold">4 أجهزة نشطة</span>
+            </div>
+            <div id="ps-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 2: PC STATIONS -->
+        <div id="section-pc" class="space-y-6 hidden">
+            <div class="flex justify-between items-center border-b border-red-900/30 pb-3">
+                <h2 class="text-xl font-black text-red-500 orbitron flex items-center gap-2">
+                    <i class="fa-solid fa-desktop"></i> أجهزة الكمبيوتر (PC Stations)
+                </h2>
+                <span class="text-xs bg-red-950 text-red-300 px-3 py-1 rounded-full border border-red-800/40 font-bold">8 أجهزة نشطة</span>
+            </div>
+            <div id="pc-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 3: LEDGER & HISTORY -->
+        <div id="section-ledger" class="space-y-6 hidden">
+            <div class="flex justify-between items-center border-b border-red-900/30 pb-3">
+                <h2 class="text-xl font-black text-red-500 orbitron flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> الحساب اليومي وسجل الحركات
+                </h2>
+                <div class="flex items-center gap-3">
+                    <span class="text-sm bg-[#121218] px-4 py-2 rounded-xl border border-red-900/30 font-bold">
+                        إجمالي إيرادات اليوم: <span id="total-daily-revenue" class="text-red-400 font-black">0</span> <span class="text-red-400 text-xs">ليرة</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Daily Statistics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-[#121218] p-4 rounded-xl border border-red-900/30">
+                    <p class="text-xs text-gray-400 mb-1">إيرادات ألعاب البلايستيشن</p>
+                    <h3 class="text-2xl font-black text-white orbitron"><span id="stats-ps-revenue">0</span> <span class="text-xs text-red-400">ليرة</span></h3>
+                </div>
+                <div class="bg-[#121218] p-4 rounded-xl border border-red-900/30">
+                    <p class="text-xs text-gray-400 mb-1">إيرادات ألعاب الكمبيوتر</p>
+                    <h3 class="text-2xl font-black text-white orbitron"><span id="stats-pc-revenue">0</span> <span class="text-xs text-red-400">ليرة</span></h3>
+                </div>
+                <div class="bg-[#121218] p-4 rounded-xl border border-red-900/30">
+                    <p class="text-xs text-gray-400 mb-1">إيرادات السلع والمأكولات</p>
+                    <h3 class="text-2xl font-black text-white orbitron"><span id="stats-items-revenue">0</span> <span class="text-xs text-red-400">ليرة</span></h3>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="bg-[#121218] rounded-xl border border-red-900/30 overflow-hidden shadow-xl">
+                <div class="p-4 border-b border-red-900/20 flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-gray-200">سجل الحركات والفواتير المنتهية</h3>
+                    <span class="text-xs text-gray-400">تحديث تلقائي بساعة النظام</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-[#181822] text-gray-400 uppercase border-b border-red-900/30">
+                            <tr>
+                                <th class="p-3">رقم/اسم الجهاز</th>
+                                <th class="p-3">اسم الحجز</th>
+                                <th class="p-3">وقت البدء</th>
+                                <th class="p-3">وقت الانتهاء</th>
+                                <th class="p-3">حساب اللعب</th>
+                                <th class="p-3">حساب السلع</th>
+                                <th class="p-3">المجموع الكلي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="divide-y divide-gray-800">
+                            <tr>
+                                <td colspan="7" class="p-6 text-center text-gray-500">لا توجد حركات مسجلة حتى الآن اليوم.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: PRODUCTS MANAGEMENT -->
+        <div id="section-products" class="space-y-6 hidden">
+            <div class="flex justify-between items-center border-b border-red-900/30 pb-3">
+                <h2 class="text-xl font-black text-red-500 orbitron flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-stacked"></i> إدارة السلع وأسعارها
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Add New Product Form -->
+                <div class="bg-[#121218] p-5 rounded-xl border border-red-900/30 space-y-4">
+                    <h3 class="font-bold text-sm text-gray-200 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-red-500"></i> إضافة سعر سلعة جديد
+                    </h3>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">سعر السلعة (باليرة)</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="new-product-price" placeholder="أدخل السعر (مثل 35)" class="flex-1 bg-[#09090b] border border-red-900/40 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-red-500">
+                            <button onclick="addNewProduct()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-lg shadow-red-900/40">
+                                إضافة
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">يمكنك إضافة أي سعر جديد للسلع لتظهر فوراً في قوائم الشراء الخاصة بكل جهاز مع عملة اليرة.</p>
+                </div>
+
+                <!-- Products List -->
+                <div class="md:col-span-2 bg-[#121218] p-5 rounded-xl border border-red-900/30 space-y-4">
+                    <h3 class="font-bold text-sm text-gray-200 flex items-center gap-2">
+                        <i class="fa-solid fa-list text-red-500"></i> قائمة أسعار السلع المتاحة حالياً
+                    </h3>
+                    <div id="products-list-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ALERTS / MODALS CONTAINER -->
+    <div id="modal-container"></div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Default products list: 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100
+        let availablePrices = [5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100];
+        
+        let dailyHistory = [];
+        let dailyStats = { ps: 0, pc: 0, items: 0 };
+
+        // Stations Data
+        const stations = {
+            ps: [
+                { id: 1, name: "PlayStation 1", type: 'ps', status: 'idle', bookingName: '', pricingMode: 'عادي', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 2, name: "PlayStation 2", type: 'ps', status: 'idle', bookingName: '', pricingMode: 'عادي', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 3, name: "PlayStation 3", type: 'ps', status: 'idle', bookingName: '', pricingMode: 'عادي', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 4, name: "PlayStation 4", type: 'ps', status: 'idle', bookingName: '', pricingMode: 'عادي', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false }
+            ],
+            pc: [
+                { id: 1, name: "PC 1", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 2, name: "PC 2", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 3, name: "PC 3", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 4, name: "PC 4", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 5, name: "PC 5", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 6, name: "PC 6", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 7, name: "PC 7", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false },
+                { id: 8, name: "PC 8", type: 'pc', status: 'idle', bookingName: '', pricingMode: 'pc', pricePerHour: 80, timeType: 'ساعة واحدة', customHours: 1, customMins: 0, totalSeconds: 3600, remainingSeconds: 0, startTime: null, endTime: null, cart: [], gameCost: 0, itemsCost: 0, timerActive: false, interval: null, alertTriggered: false }
+            ]
+        };
+
+        // Tab Switching
+        function switchTab(tabId) {
+            ['playstation', 'pc', 'ledger', 'products'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('bg-red-600', 'text-white', 'shadow-lg', 'shadow-red-900/45');
+                document.getElementById(`tab-${t}`).classList.add('bg-[#1a1a24]', 'text-gray-300');
+            });
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.remove('bg-[#1a1a24]', 'text-gray-300');
+            document.getElementById(`tab-${tabId}`).classList.add('bg-red-600', 'text-white', 'shadow-lg', 'shadow-red-900/45');
+
+            if(tabId === 'ledger') renderLedger();
+            if(tabId === 'products') renderProductsList();
+        }
+
+        // Render Stations
+        function renderAllStations() {
+            renderPSStations();
+            renderPCStations();
+        }
+
+        function renderPSStations() {
+            const container = document.getElementById('ps-grid');
+            container.innerHTML = stations.ps.map(st => generateStationCard(st)).join('');
+        }
+
+        function renderPCStations() {
+            const container = document.getElementById('pc-grid');
+            container.innerHTML = stations.pc.map(st => generateStationCard(st)).join('');
+        }
+
+        function generateStationCard(st) {
+            const isRunning = st.status === 'running';
+            const isPausedAlert = st.alertTriggered;
+
+            // Format remaining time
+            const hrs = Math.floor(st.remainingSeconds / 3600);
+            const mins = Math.floor((st.remainingSeconds % 3600) / 60);
+            const secs = st.remainingSeconds % 60;
+            const timeFormatted = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+            // Calculate live game cost based on elapsed/remaining time & RTC
+            let currentGameCost = st.gameCost;
+            if (isRunning) {
+                if (st.timeType === 'open') {
+                    const elapsedSecs = Math.floor((Date.now() - st.startTime) / 1000);
+                    currentGameCost = Math.round((elapsedSecs / 3600) * st.pricePerHour);
+                } else {
+                    const elapsedSecs = st.totalSeconds - st.remainingSeconds;
+                    currentGameCost = Math.round((elapsedSecs / 3600) * st.pricePerHour);
+                }
+            }
+            const currentItemsCost = st.cart.reduce((sum, item) => sum + item.price, 0);
+            const totalCost = currentGameCost + currentItemsCost;
+
+            return `
+                <div class="bg-[#121218] rounded-2xl border ${isRunning ? 'border-red-600/70 gaming-glow' : 'border-red-900/20'} p-5 flex flex-col gap-4 transition-all">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-red-950/80 border border-red-800/50 flex items-center justify-center text-red-400 font-bold text-xs orbitron">
+                                ${st.id}
+                            </div>
+                            <div>
+                                <h3 class="font-black text-white text-sm">${st.name}</h3>
+                                <p class="text-[10px] text-gray-400">${isRunning ? (st.timeType === 'open' ? 'وقت مفتوح (Open)' : 'عداد تنازلي') : 'جاهز / متوقف'}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-full font-bold ${isRunning ? 'bg-red-950 text-red-400 border border-red-800/40 animate-pulse' : 'bg-gray-800 text-gray-400'}">
+                            ${isRunning ? 'مشغول' : 'متاح'}
+                        </span>
+                    </div>
+
+                    <!-- Booking Name Input -->
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">اسم الحجز (Booking Name)</label>
+                        <input type="text" ${isRunning ? 'disabled' : ''} value="${st.bookingName}" onchange="updateBookingName('${st.type}', ${st.id}, this.value)" placeholder="أدخل اسم الزبون..." class="w-full bg-[#09090b] border border-red-900/40 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500 disabled:opacity-60">
+                    </div>
+
+                    <!-- Pricing Mode (PS only) -->
+                    ${st.type === 'ps' ? `
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">نوع التسعير (Pricing Mode)</label>
+                        <select ${isRunning ? 'disabled' : ''} onchange="updatePSPricing('${st.type}',${st.id}, this.value)" class="w-full bg-[#09090b] border border-red-900/40 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500 disabled:opacity-60">
+                            <option value="عادي" ${st.pricingMode === 'عادي' ? 'selected' : ''}>عادي (80 ليرة بالساعة)</option>
+                            <option value="ثلاثي" ${st.pricingMode === 'ثلاثي' ? 'selected' : ''}>ثلاثي (120 ليرة بالساعة)</option>
+                            <option value="رباعي" ${st.pricingMode === 'رباعي' ? 'selected' : ''}>رباعي (160 ليرة بالساعة)</option>
+                        </select>
+                    </div>
+                    ` : `
+                    <div class="text-xs text-red-400 bg-red-950/30 p-2 rounded-lg border border-red-900/20 flex justify-between items-center">
+                        <span>سعر الساعات:</span>
+                        <span class="font-black">80 ليرة بالساعة</span>
+                    </div>
+                    `}
+
+                    <!-- Time Selection -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">مدة اللعب</label>
+                            <select ${isRunning ? 'disabled' : ''} onchange="updateTimeType('${st.type}', ${st.id}, this.value)" class="w-full bg-[#09090b] border border-red-900/40 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500 disabled:opacity-60">
+                                <option value="ربع ساعة" ${st.timeType === 'ربع ساعة' ? 'selected' : ''}>ربع ساعة</option>
+                                <option value="نص ساعة" ${st.timeType === 'نص ساعة' ? 'selected' : ''}>نص ساعة</option>
+                                <option value="ساعة واحدة" ${st.timeType === 'ساعة واحدة' ? 'selected' : ''}>ساعة واحدة</option>
+                                <option value="ساعة ونص" ${st.timeType === 'ساعة ونص' ? 'selected' : ''}>ساعة ونص</option>
+                                <option value="ساعتين" ${st.timeType === 'ساعتين' ? 'selected' : ''}>ساعتين</option>
+                                <option value="مفتوح" ${st.timeType === 'مفتوح' ? 'selected' : ''}>مفتوح (Open)</option>
+                                <option value="تخصيص" ${st.timeType === 'تخصيص' ? 'selected' : ''}>تخصيص الوقت</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">التحكم بالبدء</label>
+                            ${!isRunning ? `
+                                <button onclick="startStation('${st.type}',${st.id})" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition shadow-md shadow-red-900/40 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-play"></i> بدء اللعب
+                                </button>
+                            ` : `
+                                <button onclick="stopStation('${st.type}',${st.id})" class="w-full bg-zinc-800 hover:bg-zinc-700 text-red-400 border border-red-800/40 font-bold py-1.5 px-3 rounded-lg text-xs transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-stop"></i> إنهاء الحساب
+                                </button>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- Custom Time Inputs if selected -->
+                    ${st.timeType === 'تخصيص' && !isRunning ? `
+                    <div class="grid grid-cols-2 gap-2 bg-[#09090b] p-2 rounded-lg border border-red-900/30">
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-0.5">ساعات</label>
+                            <input type="number" min="0" value="${st.customHours}" onchange="updateCustomHours('${st.type}',${st.id}, this.value)" class="w-full bg-[#121218] border border-red-900/40 rounded px-2 py-1 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-0.5">دقائق</label>
+                            <input type="number" min="0" max="59" value="${st.customMins}" onchange="updateCustomMins('${st.type}',${st.id}, this.value)" class="w-full bg-[#121218] border border-red-900/40 rounded px-2 py-1 text-xs text-white">
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Timer Display -->
+                    <div class="bg-[#09090b] p-3 rounded-xl border border-red-900/30 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] text-gray-400 block">العداد التنازلي / الوقت</span>
+                            <span class="text-xl font-black orbitron text-white tracking-widest">${timeFormatted}</span>
+                        </div>
+                        <span class="text-xs text-gray-400">${st.timeType === 'مفتوح' ? 'مفتوح' : 'دقيقة / ساعة'}</span>
+                    </div>
+
+                    <!-- Items Cart Section for this device -->
+                    <div class="bg-[#09090b] p-3 rounded-xl border border-red-900/30 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-300 flex items-center gap-1">
+                                <i class="fa-solid fa-basket-shopping text-red-500"></i> سلة السلع (<span id="cart-count-${st.type}-${st.id}">${st.cart.length}</span>)
+                            </span>
+                            <span class="text-xs font-bold text-red-400">${currentItemsCost} <span class="text-[10px]">ليرة</span></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <select id="item-select-${st.type}-${st.id}" class="flex-1 bg-[#121218] border border-red-900/40 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
+                                ${availablePrices.map(p => `<option value="${p}">${p} ليرة</option>`).join('')}
+                            </select>
+                            <button onclick="addItemToStation('${st.type}', ${st.id})" class="bg-red-950 hover:bg-red-900 text-red-200 border border-red-800/40 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-plus"></i> إضافة
+                            </button>
+                        </div>
+                        <!-- Cart Items List / Chips -->
+                        ${st.cart.length > 0 ? `
+                        <div class="flex flex-wrap gap-1 pt-1 max-h-20 overflow-y-auto">
+                            ${st.cart.map((item, idx) => `
+                                <span class="inline-flex items-center gap-1 bg-[#181822] text-gray-200 text-[10px] px-2 py-0.5 rounded border border-red-900/30">
+                                    ${item.price} ليرة
+                                    <button onclick="removeCartItem('${st.type}', ${st.id}, ${idx})" class="text-red-400 hover:text-red-300 ml-1">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </span>
+                            `).join('')}
+                        </div>
+                        ` : '<p class="text-[10px] text-gray-500 text-center py-1">السلة فارغة</p>'}
+                    </div>
+
+                    <!-- Total Live Summary -->
+                    <div class="flex justify-between items-center pt-2 border-t border-red-900/20 text-xs">
+                        <span class="text-gray-400 font-bold">المجموع الكلي للحساب:</span>
+                        <span class="text-base font-black text-red-500 orbitron">${totalCost} <span class="text-xs">ليرة</span></span>
+                    </div>
+
+                    <!-- Alert Banner if Timer Completed and Acknowledged Pending -->
+                    ${isPausedAlert ? `
+                    <div class="bg-red-600 text-white p-3 rounded-xl flex flex-col gap-2 animate-bounce shadow-lg">
+                        <div class="flex items-center gap-2 text-xs font-bold">
+                            <i class="fa-solid fa-bell text-sm"></i>
+                            <span>انتهى الوقت المحدد للجهاز ${st.name}!</span>
+                        </div>
+                        <button onclick="acknowledgeAlert('${st.type}',${st.id})" class="bg-black hover:bg-zinc-900 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition border border-red-400">
+                            تم الانتباه (إيقاف الإنذار)
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Station Control Functions
+        function updateBookingName(type, id, val) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) st.bookingName = val;
+        }
+
+        function updatePSPricing(type, id, val) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.pricingMode = val;
+                if(val === 'عادي') st.pricePerHour = 80;
+                if(val === 'ثلاثي') st.pricePerHour = 120;
+                if(val === 'رباعي') st.pricePerHour = 160;
+                renderAllStations();
+            }
+        }
+
+        function updateTimeType(type, id, val) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.timeType = val;
+                if(val === 'ربع ساعة') st.totalSeconds = 900;
+                else if(val === 'نص ساعة') st.totalSeconds = 1800;
+                else if(val === 'ساعة واحدة') st.totalSeconds = 3600;
+                else if(val === 'ساعة ونص') st.totalSeconds = 5400;
+                else if(val === 'ساعتين') st.totalSeconds = 7200;
+                else if(val === 'تخصيص') {
+                    st.totalSeconds = (st.customHours * 3600) + (st.customMins * 60);
+                }
+                st.remainingSeconds = st.totalSeconds;
+                renderAllStations();
+            }
+        }
+
+        function updateCustomHours(type, id, val) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.customHours = Math.max(0, parseInt(val) || 0);
+                st.totalSeconds = (st.customHours * 3600) + (st.customMins * 60);
+                st.remainingSeconds = st.totalSeconds;
+                renderAllStations();
+            }
+        }
+
+        function updateCustomMins(type, id, val) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.customMins = Math.max(0, Math.min(59, parseInt(val) || 0));
+                st.totalSeconds = (st.customHours * 3600) + (st.customMins * 60);
+                st.remainingSeconds = st.totalSeconds;
+                renderAllStations();
+            }
+        }
+
+        function addItemToStation(type, id) {
+            const st = stations[type].find(s => s.id === id);
+            const selectEl = document.getElementById(`item-select-${type}-${id}`);
+            const price = parseInt(selectEl.value);
+            if(st && price) {
+                st.cart.push({ price: price });
+                renderAllStations();
+            }
+        }
+
+        function removeCartItem(type, id, idx) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.cart.splice(idx, 1);
+                renderAllStations();
+            }
+        }
+
+        // Start Station Timer using Real-Time Clock (RTC)
+        function startStation(type, id) {
+            const st = stations[type].find(s => s.id === id);
+            if(!st) return;
+
+            st.status = 'running';
+            st.startTime = Date.now();
+            st.alertTriggered = false;
+
+            if (st.timeType !== 'open') {
+                if(st.totalSeconds <= 0) st.totalSeconds = 3600;
+                st.remainingSeconds = st.totalSeconds;
+            } else {
+                st.remainingSeconds = 0;
+            }
+
+            // Real-Time Clock interval check every second
+            st.interval = setInterval(() => {
+                if (st.timeType === 'open') {
+                    // For open time, remaining doesn't count down, elapsed increases
+                } else {
+                    if (st.remainingSeconds > 0) {
+                        st.remainingSeconds--;
+                    } else {
+                        // Timer finished! Pause at 00:00 and trigger alert
+                        clearInterval(st.interval);
+                        st.interval = null;
+                        st.alertTriggered = true;
+                        playAlertSound();
+                    }
+                }
+                renderAllStations();
+            }, 1000);
+
+            renderAllStations();
+        }
+
+        // Acknowledge Timer Alert (Click "تم الانتباه")
+        function acknowledgeAlert(type, id) {
+            const st = stations[type].find(s => s.id === id);
+            if(st) {
+                st.alertTriggered = false;
+                renderAllStations();
+            }
+        }
+
+        // Stop Station & Generate Invoice / Ledger Record
+        function stopStation(type, id) {
+            const st = stations[type].find(s => s.id === id);
+            if(!st) return;
+
+            if(st.interval) {
+                clearInterval(st.interval);
+                st.interval = null;
+            }
+
+            st.endTime = Date.now();
+
+            // Calculate final costs
+            let finalGameCost = 0;
+            if (st.timeType === 'open') {
+                const elapsedSecs = Math.floor((st.endTime - st.startTime) / 1000);
+                finalGameCost = Math.round((elapsedSecs / 3600) * st.pricePerHour);
+            } else {
+                const elapsedSecs = st.totalSeconds - st.remainingSeconds;
+                finalGameCost = Math.round((elapsedSecs / 3600) * st.pricePerHour);
+            }
+            const finalItemsCost = st.cart.reduce((sum, item) => sum + item.price, 0);
+            const total = finalGameCost + finalItemsCost;
+
+            // Save to daily history log
+            const record = {
+                stationName: st.name,
+                type: st.type,
+                bookingName: st.bookingName || 'بدون اسم',
+                startTimeStr: new Date(st.startTime).toLocaleTimeString(),
+                endTimeStr: new Date(st.endTime).toLocaleTimeString(),
+                gameCost: finalGameCost,
+                itemsCost: finalItemsCost,
+                total: total
+            };
+
+            dailyHistory.push(record);
+            if(st.type === 'ps') dailyStats.ps += finalGameCost;
+            if(st.type === 'pc') dailyStats.pc += finalGameCost;
+            dailyStats.items += finalItemsCost;
+
+            // Show Invoice Modal
+            showInvoiceModal(record);
+
+            // Reset station state
+            st.status = 'idle';
+            st.bookingName = '';
+            st.cart = [];
+            st.remainingSeconds = 0;
+            st.alertTriggered = false;
+
+            renderAllStations();
+        }
+
+        // Show Invoice Modal Popup
+        function showInvoiceModal(record) {
+            const container = document.getElementById('modal-container');
+            container.innerHTML = `
+                <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div class="bg-[#121218] border border-red-600 rounded-2xl max-w-md w-full p-6 space-y-6 gaming-glow shadow-2xl">
+                        <div class="text-center space-y-2">
+                            <div class="w-12 h-12 bg-red-950 border border-red-600 rounded-xl mx-auto flex items-center justify-center text-red-500 text-xl font-bold orbitron">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <h3 class="text-xl font-black text-white orbitron">فاتورة الحجز النهائية</h3>
+                            <p class="text-xs text-red-400">Samer Gaming Lounge</p>
+                        </div>
+
+                        <div class="space-y-3 bg-[#09090b] p-4 rounded-xl border border-red-900/30 text-xs">
+                            <div class="flex justify-between py-1 border-b border-gray-800">
+                                <span class="text-gray-400">اسم الجهاز:</span>
+                                <span class="font-bold text-white">${record.stationName}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-800">
+                                <span class="text-gray-400">اسم الحجز:</span>
+                                <span class="font-bold text-white">${record.bookingName}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-800">
+                                <span class="text-gray-400">وقت البدء والانتهاء:</span>
+                                <span class="font-bold text-white">${record.startTimeStr} - ${record.endTimeStr}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-800">
+                                <span class="text-gray-400">حساب اللعب:</span>
+                                <span class="font-bold text-red-400">${record.gameCost} ليرة</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-800">
+                                <span class="text-gray-400">حساب السلع:</span>
+                                <span class="font-bold text-red-400">${record.itemsCost} ليرة</span>
+                            </div>
+                            <div class="flex justify-between py-2 text-sm font-black border-t border-red-900/50 text-white">
+                                <span>المجموع الكلي:</span>
+                                <span class="text-red-500 text-base">${record.total} ليرة</span>
+                            </div>
+                        </div>
+
+                        <button onclick="closeModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-lg shadow-red-900/50">
+                            تم (إغلاق الفاتورة)
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('modal-container').innerHTML = '';
+        }
+
+        function playAlertSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+            } catch(e) {
+                console.log('Audio context not allowed yet');
+            }
+        }
+
+        // Products Management
+        function renderProductsList() {
+            const container = document.getElementById('products-list-container');
+            container.innerHTML = availablePrices.map((price, idx) => `
+                <div class="bg-[#09090b] p-3 rounded-xl border border-red-900/30 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block">سعر سلعة</span>
+                        <span class="text-base font-black text-white orbitron">${price} <span class="text-xs text-red-400">ليرة</span></span>
+                    </div>
+                    <button onclick="deleteProduct(${idx})" class="w-7 h-7 bg-red-950/60 hover:bg-red-900 text-red-400 rounded-lg border border-red-800/40 flex items-center justify-center text-xs transition" title="حذف السلعة">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addNewProduct() {
+            const input = document.getElementById('new-product-price');
+            const price = parseInt(input.value);
+            if(price && !availablePrices.includes(price)) {
+                availablePrices.push(price);
+                availablePrices.sort((a,b) => a - b);
+                input.value = '';
+                renderProductsList();
+                renderAllStations();
+            }
+        }
+
+        function deleteProduct(idx) {
+            availablePrices.splice(idx, 1);
+            renderProductsList();
+            renderAllStations();
+        }
+
+        // Ledger & History Render
+        function renderLedger() {
+            const tbody = document.getElementById('history-table-body');
+            const totalRevenue = dailyStats.ps + dailyStats.pc + dailyStats.items;
+
+            document.getElementById('total-daily-revenue').innerText = totalRevenue;
+            document.getElementById('stats-ps-revenue').innerText = dailyStats.ps;
+            document.getElementById('stats-pc-revenue').innerText = dailyStats.pc;
+            document.getElementById('stats-items-revenue').innerText = dailyStats.items;
+
+            if(dailyHistory.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">لا توجد حركات مسجلة حتى الآن اليوم.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = dailyHistory.map(h => `
+                <tr class="hover:bg-[#181822]">
+                    <td class="p-3 font-bold text-white">${h.stationName}</td>
+                    <td class="p-3 text-gray-300">${h.bookingName}</td>
+                    <td class="p-3 text-gray-400">${h.startTimeStr}</td>
+                    <td class="p-3 text-gray-400">${h.endTimeStr}</td>
+                    <td class="p-3 text-red-400 font-bold">${h.gameCost} ليرة</td>
+                    <td class="p-3 text-red-400 font-bold">${h.itemsCost} ليرة</td>
+                    <td class="p-3 font-black text-white">${h.total} ليرة</td>
+                </tr>
+            `).join('');
+        }
+
+        // Reset Daily Data / Ledger
+        function resetDailyData() {
+            if(confirm('هل أنت متأكد من تصفير السجل اليومي وإيرادات اليوم بالكامل؟')) {
+                dailyHistory = [];
+                dailyStats = { ps: 0, pc: 0, items: 0 };
+                renderLedger();
+                alert('تم تصفير السجل اليومي بنجاح.');
+            }
+        }
+
+        // Initial Render on Load
+        window.onload = function() {
+            renderAllStations();
+            renderProductsList();
+        };
+    </script>
+</body>
+</html>
